@@ -30,10 +30,19 @@ class MNode(Node):
         moriarty_node.name = node.get_name()
         moriarty_node.position = node.get_position()
         moriarty_node.id = node.get_id()
+        moriarty_node.hidden = node.is_hidden()
         moriarty_node.options = []
         for i in range(1, 4):
             moriarty_node.options.append(node.get_option(i))
         return moriarty_node
+
+    def do_action(self, action: ActionType) -> None:
+        """
+        Perform an action on the node.
+
+        :param action: The action to perform.
+        """
+        self._do_action(self.id, self.position.x, self.position.y, action)
 
     def distance(self) -> int:
         """

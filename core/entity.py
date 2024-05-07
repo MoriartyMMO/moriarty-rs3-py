@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
 
+from ..debug.mlog import log
 if TYPE_CHECKING:
     from ._scene import ActionType, Vec2i, Entity, get_hero_position
 else:
-    from cockbot5.core import log
     from cockbot5.scene import Vec2i, Entity, ActionType, get_hero_position
 
 
@@ -24,7 +24,7 @@ class MEntity(Entity):
     @classmethod
     def from_entity(cls, entity):
         if not isinstance(entity, Entity):
-            raise ValueError("Expected an Entity instance")
+            log("Expected an Entity instance, got {}".format(type(entity)))
 
         moriarty_entity = cls()
         moriarty_entity.name = entity.get_name()

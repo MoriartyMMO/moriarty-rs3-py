@@ -6,10 +6,31 @@ class Vec2i:
     y: int = ...
 
 
-class ActionType(Enum): ...
+class ActionType(Enum):
+    OBJECT_ONE = 1,
+    OBJECT_TWO = 2,
+    OBJECT_THREE = 3,
+    LOC_ONE = 4,
+    ENTITY_ONE = 5,
+    ENTITY_TWO = 6,
+    ENTITY_THREE = 7,
+    ENTITY_FOUR = 8,
+    ENTITY_FIVE = 9,
+    ENTITY_SIX = 10,
+    OBJECT_FOUR = 11,
+    OBJECT_FIVE = 12,
+    OBJECT_SIX = 13,
+    GROUND_ITEM_ONE = 14,
+    GROUND_ITEM_TWO = 15,
+    PRESET = 69,
+    HARVEST = 70
 
 
-class ObjectType(Enum): ...
+class ObjectType(Enum):
+    NPC = 1,
+    PLAYER = 2,
+    GROUND_ITEM = 3,
+    LOCATION = 12
 
 
 class Node:
@@ -19,7 +40,14 @@ class Node:
     def get_type(self) -> int: ...
     def get_id(self) -> int: ...
     def get_option(self, option_index: int) -> str: ...
-    def _do_action(self, id: int, action_type: ActionType) -> None: ...
+
+    def _do_action(
+        self,
+        id: int,
+        x: int,
+        y: int,
+        action_type: ActionType
+    ) -> None: ...
 
 
 class Entity:
@@ -47,3 +75,4 @@ class GroundItem:
 
 def get_hero_position() -> Vec2i: ...
 def get_entities(object_type: ObjectType) -> list: ...
+def walk(x: int, y: int) -> None: ...
