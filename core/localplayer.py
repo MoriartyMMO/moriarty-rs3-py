@@ -33,7 +33,7 @@ class LocalPlayer:
 
         :return The player's current prayer points.
         """
-        return get_prayer_points()
+        return int(get_prayer_points() / 10)
 
     @property
     def summoning_points(self) -> int:
