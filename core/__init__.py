@@ -1,4 +1,4 @@
 __all__ = [
     "node", "entity", "world",
-    "ground_item", "traversal"
+    "ground_item", "traversal", "localplayer"
 ]

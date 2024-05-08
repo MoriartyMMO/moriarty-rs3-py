@@ -14,7 +14,13 @@ if TYPE_CHECKING:
     from ._core import key_press
 else:
     from cockbot5.core import log, key_press
-    from cockbot5.scene import Vec2i, GroundItem, ActionType, get_hero_position, walk
+    from cockbot5.scene import (
+        Vec2i,
+        GroundItem,
+        ActionType,
+        get_hero_position,
+        walk
+    )
 
 from time import sleep
 
