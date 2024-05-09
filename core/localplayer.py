@@ -7,12 +7,14 @@ if TYPE_CHECKING:
         get_prayer_points,
         get_summoning_points
     )
+    from ._scene import get_hero_animation
 else:
     from cockbot5.localplayer import (
         get_health,
         get_prayer_points,
         get_summoning_points
     )
+    from cockbot5.scene import get_hero_animation
 
 
 class LocalPlayer:
@@ -43,3 +45,12 @@ class LocalPlayer:
         :return The player's current summoning points.
         """
         return get_summoning_points()
+
+    @property
+    def animation(self) -> int:
+        """
+        Get the player's current animation.
+
+        :return The player's current animation.
+        """
+        return get_hero_animation()
