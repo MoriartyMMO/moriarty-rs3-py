@@ -22,14 +22,21 @@ class ActionType(Enum):
     OBJECT_SIX = 13,
     GROUND_ITEM_ONE = 14,
     GROUND_ITEM_TWO = 15,
+    #
+    # These are temporary for personal use.
+    # They are to interact with scene objects which are
+    # currently unsupported.
+    #
     PRESET = 69,
     HARVEST = 70
+    REPAIR_ALL = 71
 
 
 class ObjectType(Enum):
     NPC = 1,
     PLAYER = 2,
     GROUND_ITEM = 3,
+    ANIMATION = 4,
     LOCATION = 12
 
 
@@ -58,6 +65,7 @@ class Entity:
     def get_id(self) -> int: ...
     def _do_action(self, id: int, action_type: ActionType) -> None: ...
     def get_combat_level(self) -> int: ...
+    def get_animation(self) -> int: ...
 
 
 class GroundItem:
@@ -71,6 +79,12 @@ class GroundItem:
     def _do_action(
         self, id: int, x: int, y: int, action_type: ActionType
     ) -> None: ...
+
+
+class Animation:
+    def __init__(self) -> None: ...
+    def get_position(self) -> Vec2i: ...
+    # def get_id(self) -> int: ...
 
 
 def get_hero_position() -> Vec2i: ...

@@ -12,6 +12,10 @@ class MEntity(Entity):
     combat_level: int
     position: Vec2i
     id: int
+    # We need this or Pybind11 just fucking nukes it.
+    # Because apparently they didn't think about
+    # inheritance too much.
+    obj: Entity
 
     def __init__(self):
         """
@@ -23,6 +27,12 @@ class MEntity(Entity):
 
     @classmethod
     def from_entity(cls, entity):
+        """
+        Takes in an instance of the native-defined `Entity`
+        and returns a Python-defined `MEntity`.
+
+        :return MEntity
+        """
         if not isinstance(entity, Entity):
             log("Expected an Entity instance, got {}".format(type(entity)))
 
@@ -31,7 +41,14 @@ class MEntity(Entity):
         moriarty_entity.combat_level = entity.get_combat_level()
         moriarty_entity.position = entity.get_position()
         moriarty_entity.id = entity.get_id()
+        moriarty_entity.obj = entity
         return moriarty_entity
+
+    def log_animation(self):
+        """
+        Logs the entity's current animation.
+        """
+        log(f"{self.name} animation: {str(self.obj.get_animation())}")
 
     def do_action(self, action: ActionType) -> None:
         """

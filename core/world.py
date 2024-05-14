@@ -1,9 +1,9 @@
-from ..debug.mlog import log
 from .node import MNode
 from .entity import MEntity
 from .ground_item import MGroundItem
+from .animation import MAnimation
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 if TYPE_CHECKING:
     from ._scene import (
         ActionType,
@@ -11,17 +11,18 @@ if TYPE_CHECKING:
         Entity,
         Node,
         GroundItem,
+        Animation,
         Vec2i,
         get_hero_position,
         get_entities
     )
 else:
-    from cockbot5.core import log
     from cockbot5.scene import (
         Vec2i,
         Entity,
         Node,
         GroundItem,
+        Animation,
         ActionType,
         ObjectType,
         get_hero_position,
@@ -38,11 +39,12 @@ class World:
         :return A list of all nodes in the world.
         """
         nodes = get_entities(ObjectType.LOCATION)
-        return [
+        m_nodes = [
             MNode.from_node(node)
             for node in nodes
             if isinstance(node, Node)
         ]
+        return [node for node in m_nodes if len(node.name) > 1]
 
     @property
     def npcs(self) -> list[MEntity]:
@@ -55,7 +57,7 @@ class World:
         return [
             MEntity.from_entity(npc)
             for npc in npcs
-            # There's some black magig oscillating crystal shit going on
+            # There's some black magic oscillating crystal shit going on
             # with Pybind11. We need to ensure we are actually only getting
             # Entities here.
             # It is not a problem with the native code I wrote.
@@ -80,3 +82,36 @@ class World:
             for ground_item in ground_items
             if isinstance(ground_item, GroundItem)
         ]
+
+    @property
+    def animations(self) -> list[MAnimation]:
+        animations = get_entities(ObjectType.ANIMATION)
+        return [
+            MAnimation.from_animation(animation)
+            for animation in animations
+            if isinstance(animation, Animation)
+        ]
+
+    def npc_with_name(self, name) -> Union[MEntity, None]:
+        """
+        Filters NPCs by name. Case-insensitive.
+        """
+        entities = [
+            e for e in
+            self.npcs if e.name.lower() == name.lower()
+        ]
+        if len(entities) == 0:
+            return None
+        return entities.pop()
+
+    def node_with_name(self, name) -> Union[MNode, None]:
+        """
+        Filters nodes by name. Case-insensitive.
+        """
+        nodes = [
+            n for n in
+            self.nodes if n.name.lower() == name.lower()
+        ]
+        if len(nodes) == 0:
+            return None
+        return nodes.pop()

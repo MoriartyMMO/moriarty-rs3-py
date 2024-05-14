@@ -27,13 +27,21 @@ class MNode(Node):
             raise ValueError("Expected a Node instance")
 
         moriarty_node = cls()
-        moriarty_node.name = node.get_name()
+        try:
+            moriarty_node.name = node.get_name()
+        except UnicodeDecodeError:
+            # So we don't crash if garbage data is somehow read.
+            # We read from live pointers, no caching.
+            # So this is always a possibility.
+            #
+            moriarty_node.name = "Unknown"
+
         moriarty_node.position = node.get_position()
         moriarty_node.id = node.get_id()
         moriarty_node.hidden = node.is_hidden()
         moriarty_node.options = []
-        for i in range(1, 4):
-            moriarty_node.options.append(node.get_option(i))
+        # for i in range(1, 2):
+        #     moriarty_node.options.append(node.get_option(i))
         return moriarty_node
 
     def do_action(self, action: ActionType) -> None:
