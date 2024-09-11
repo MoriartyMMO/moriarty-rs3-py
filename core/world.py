@@ -61,7 +61,6 @@ class World:
             # Entities here.
             # It is not a problem with the native code I wrote.
             # This only happens when get_entities is called from Python.
-            # Kill yourself @pybind11
             if isinstance(npc, Entity)
         ]
 
@@ -102,18 +101,19 @@ class World:
         :param limit: The maximum number of nodes to search for. 0 for no limit.
         :param iteration_delay: The delay between attempts to find node in seconds.
         """
-        nodes = [n for n in self.nodes if n.name.lower() == name.lower()]
+        name_lower = name.lower()
         iterations = 0
-        while len(nodes) == 0 and iterations <= limit:
-            nodes = [n for n in self.nodes if n.name.lower() == name.lower()]
-            iterations += 1
-            if iteration_delay > 0:
-                sleep(iteration_delay)
 
-        try:
-            return nodes.pop()
-        except IndexError:
-            return None
+        while limit == 0 or iterations < limit:
+            nodes = [n for n in self.nodes if n.name.lower() == name_lower]
+
+            if nodes:
+                return nodes[0] 
+
+            iterations += 1
+            sleep(iteration_delay)
+
+        return None
 
     def npc_with_name(self, name) -> Union[MEntity, None]:
         """
