@@ -44,6 +44,12 @@ class MEntity(Entity):
         moriarty_entity.obj = entity
         return moriarty_entity
 
+    def get_animation(self) -> int:
+        """
+        return: The current animation id of the Entity.
+        """
+        return self.obj.get_animation()
+
     def log_animation(self):
         """
         Logs the entity's current animation.

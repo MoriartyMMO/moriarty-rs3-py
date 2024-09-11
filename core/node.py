@@ -29,12 +29,13 @@ class MNode(Node):
         moriarty_node = cls()
         try:
             moriarty_node.name = node.get_name()
-        except UnicodeDecodeError:
+        except UnicodeDecodeError as e:
             # So we don't crash if garbage data is somehow read.
             # We read from live pointers, no caching.
             # So this is always a possibility.
             #
             moriarty_node.name = "Unknown"
+            print(f"Error reading node name: {e}")
 
         moriarty_node.position = node.get_position()
         moriarty_node.id = node.get_id()

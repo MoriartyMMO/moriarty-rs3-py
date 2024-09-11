@@ -1,9 +1,12 @@
+from time import sleep
+
 from .node import MNode
 from .entity import MEntity
 from .ground_item import MGroundItem
 from .animation import MAnimation
 
 from typing import TYPE_CHECKING, Union
+
 if TYPE_CHECKING:
     from ._scene import (
         ActionType,
@@ -14,7 +17,7 @@ if TYPE_CHECKING:
         Animation,
         Vec2i,
         get_hero_position,
-        get_entities
+        get_entities,
     )
 else:
     from cockbot5.scene import (
@@ -39,11 +42,7 @@ class World:
         :return A list of all nodes in the world.
         """
         nodes = get_entities(ObjectType.LOCATION)
-        m_nodes = [
-            MNode.from_node(node)
-            for node in nodes
-            if isinstance(node, Node)
-        ]
+        m_nodes = [MNode.from_node(node) for node in nodes if isinstance(node, Node)]
         return [node for node in m_nodes if len(node.name) > 1]
 
     @property
@@ -92,14 +91,44 @@ class World:
             if isinstance(animation, Animation)
         ]
 
+    def get_node_blocking(
+        self, name, limit=0, iteration_delay=0.1
+    ) -> Union[MNode, None]:
+        """
+        Filters nodes by name. Case-insensitive.
+        Blocks until the node is found.
+
+        :param name: The name of the node to find.
+        :param limit: The maximum number of nodes to search for. 0 for no limit.
+        :param iteration_delay: The delay between attempts to find node in seconds.
+        """
+        nodes = [n for n in self.nodes if n.name.lower() == name.lower()]
+        iterations = 0
+        while len(nodes) == 0 and iterations <= limit:
+            nodes = [n for n in self.nodes if n.name.lower() == name.lower()]
+            iterations += 1
+            if iteration_delay > 0:
+                sleep(iteration_delay)
+
+        try:
+            return nodes.pop()
+        except IndexError:
+            return None
+
     def npc_with_name(self, name) -> Union[MEntity, None]:
         """
         Filters NPCs by name. Case-insensitive.
         """
-        entities = [
-            e for e in
-            self.npcs if e.name.lower() == name.lower()
-        ]
+        entities = [e for e in self.npcs if e.name.lower() == name.lower()]
+        if len(entities) == 0:
+            return None
+        return entities.pop()
+
+    def npc_with_name_contains(self, name_substr) -> Union[MEntity, None]:
+        """
+        Filters NPCs by name substr. Case-insensitive.
+        """
+        entities = [e for e in self.npcs if name_substr.lower() in e.name.lower()]
         if len(entities) == 0:
             return None
         return entities.pop()
@@ -108,10 +137,11 @@ class World:
         """
         Filters nodes by name. Case-insensitive.
         """
-        nodes = [
-            n for n in
-            self.nodes if n.name.lower() == name.lower()
-        ]
+        nodes = [n for n in self.nodes if n.name.lower() == name.lower()]
         if len(nodes) == 0:
             return None
         return nodes.pop()
+
+    def nodes_with_name(self, name):
+        nodes = [n for n in self.nodes if n.name.lower() == name.lower()]
+        return nodes

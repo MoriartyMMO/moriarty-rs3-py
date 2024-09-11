@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class Rasial(Enum):
+class Rasial(IntEnum):
     """
     Animation identifiers for the boss Rasial.
     """
